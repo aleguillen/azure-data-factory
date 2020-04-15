@@ -127,14 +127,14 @@ resource "azurerm_sql_database" "example" {
 
     zone_redundant      = var.sql_zone_redundant_enabled
 
-    import {
-        storage_uri = azurerm_storage_blob.bacpac.url
-        storage_key = azurerm_storage_account.example.primary_access_key
-        storage_key_type = "StorageAccessKey" # Valid values are StorageAccessKey or SharedAccessKey.
-        administrator_login = var.sql_username
-        administrator_login_password = var.sql_password
-        authentication_type = "SQL" # Valid values are SQL or ADPassword.
-    }
+    # import {
+    #     storage_uri = azurerm_storage_blob.bacpac.url
+    #     storage_key = azurerm_storage_account.example.primary_access_key
+    #     storage_key_type = "StorageAccessKey" # Valid values are StorageAccessKey or SharedAccessKey.
+    #     administrator_login = var.sql_username
+    #     administrator_login_password = var.sql_password
+    #     authentication_type = "SQL" # Valid values are SQL or ADPassword.
+    # }
 
     tags = merge(
         local.common_tags, 
