@@ -14,6 +14,6 @@ sql_edition = "Standard"
 
 sql_zone_redundant_enabled = false
 
-    sql_firewall_rull_ip_address = "<replace-me>"
+sql_firewall_rull_ip_address = "<replace-me>"
 
-# df_github_config =  null
+df_github_config =  null

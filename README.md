@@ -15,14 +15,19 @@ Azure Data Factory
 * Clone repo in your local computer, for more info see [here](https://docs.microsoft.com/en-us/azure/devops/repos/git/clone).
     * Git source Url: https://github.com/aleguillen/azure-data-factory
 
-## How to run [Blob to SQL example](/blob-to-sql)
+## How to run [ADLS to SQL example](/adls-to-sql)
 
-> ARM Template reference [here](https://github.com/aleguillen/azure-quickstart-templates/tree/master/101-data-factory-blob-to-sql-copy).
-
+* Before you start, update variables values inside file *terraform.tfvars* located in */adls-to-sql/infra*.
+* Navidate to the repo location in your local computer.
+* Execute the following bash script:
 
     ```bash
     # Move to sample infra folder
-    cd ./blob-to-sql/infra
+    cd ./adls-to-sql/infra
+
+    # Remember to Login to Azure
+    # az login
+    # az account set --subscription <replace-me-subscription-id>
 
     # Script to execute Terraform script - To perform: init, plan and apply select option 5
     ../../deploy.sh

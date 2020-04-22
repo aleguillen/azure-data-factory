@@ -18,13 +18,15 @@ resource "azurerm_resource_group" "example" {
     )
 }
 
-# CREATE: Storage Account
+# CREATE: Data Lake Gen2
 resource "azurerm_storage_account" "example" {
     name                     = local.storage_account_name
     resource_group_name      = azurerm_resource_group.example.name
     location                 = azurerm_resource_group.example.location
     account_tier             = "Standard"
     account_replication_type = "LRS"
+
+    is_hns_enabled           = true
   
     tags = merge(
         local.common_tags, 
@@ -34,36 +36,19 @@ resource "azurerm_storage_account" "example" {
     )
 }
 
-# CREATE: Storage Account Container - CSV input
-resource "azurerm_storage_container" "input" {
-  name                  = "input"
-  storage_account_name  = azurerm_storage_account.example.name
-  container_access_type = "private"
-}
-
-# CREATE: Storage Account Container - SQL bacpac
-resource "azurerm_storage_container" "sql" {
-  name                  = "bacpac"
-  storage_account_name  = azurerm_storage_account.example.name
-  container_access_type = "private"
+# CREATE: Data Lake Gen2 File System
+resource "azurerm_storage_data_lake_gen2_filesystem" "example" {
+  name               = "input"
+  storage_account_id = azurerm_storage_account.example.id
 }
 
 # UPLOAD: Initial CSV load for sample
 resource "azurerm_storage_blob" "csv" {
   name                   = "emp.csv"
   storage_account_name   = azurerm_storage_account.example.name
-  storage_container_name = azurerm_storage_container.input.name
+  storage_container_name = azurerm_storage_data_lake_gen2_filesystem.example.name
   type                   = "Block"
   source                 = "../input/emp.csv"
-}
-
-# UPLOAD: Initial SQL bacpac file
-resource "azurerm_storage_blob" "bacpac" {
-  name                   = "dbo.bacpac"
-  storage_account_name   = azurerm_storage_account.example.name
-  storage_container_name = azurerm_storage_container.sql.name
-  type                   = "Block"
-  source                 = "../scripts/dbo.bacpac"
 }
 
 # CREATE: SQL server
@@ -126,15 +111,6 @@ resource "azurerm_sql_database" "example" {
     edition             = var.sql_edition
 
     zone_redundant      = var.sql_zone_redundant_enabled
-
-    # import {
-    #     storage_uri = azurerm_storage_blob.bacpac.url
-    #     storage_key = azurerm_storage_account.example.primary_access_key
-    #     storage_key_type = "StorageAccessKey" # Valid values are StorageAccessKey or SharedAccessKey.
-    #     administrator_login = var.sql_username
-    #     administrator_login_password = var.sql_password
-    #     authentication_type = "SQL" # Valid values are SQL or ADPassword.
-    # }
 
     tags = merge(
         local.common_tags, 
@@ -225,17 +201,17 @@ resource "azurerm_data_factory" "example" {
         type = "SystemAssigned"
     }
 
-    # dynamic "github_configuration" {
-    #     for_each  = local.df_github_configuration
+    dynamic "github_configuration" {
+        for_each  = local.df_github_configuration
 
-    #     content {
-    #         account_name     = github_configuration.value["account_name"]
-    #         branch_name      = github_configuration.value["branch_name"]
-    #         git_url          = github_configuration.value["git_url"]
-    #         repository_name  = github_configuration.value["repository_name"]
-    #         root_folder      = github_configuration.value["root_folder"]
-    #     }
-    # }
+        content {
+            account_name     = github_configuration.value["account_name"]
+            branch_name      = github_configuration.value["branch_name"]
+            git_url          = github_configuration.value["git_url"]
+            repository_name  = github_configuration.value["repository_name"]
+            root_folder      = github_configuration.value["root_folder"]
+        }
+    }
 
     tags = merge(
         local.common_tags,
@@ -258,3 +234,16 @@ resource "azurerm_key_vault_access_policy" "data_factory" {
         "list"
     ]
 }
+
+# resource "null_resource" "sql_script" {
+#   triggers = {
+#     always_run = uuid()
+#   }
+  
+#   provisioner "local-exec" {
+#     working_dir = "../scripts"
+#     command = <<EOT
+#     sqlcmd -S '${azurerm_sql_server.example.fully_qualified_domain_name}' -U '${var.sql_username}' -P '${var.sql_password}' -d '${azurerm_sql_database.example.name}' -i dbo.sql.txt
+#     EOT
+#   }
+# }

@@ -12,7 +12,7 @@ locals {
 
   storage_account_name   = "${var.prefix}${var.location}${var.environment_name}sa"
   
-  # df_github_configuration = var.environment_name == "dev" && var.df_github_config == null ? list(var.df_github_config) : null
+  df_github_configuration = var.environment_name == "dev" ? (var.df_github_config == null ? [] : list(var.df_github_config)) : []
 
   common_tags = {
     environment = var.environment_name
