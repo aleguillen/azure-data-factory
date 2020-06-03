@@ -58,10 +58,10 @@ variable "sql_zone_redundant_enabled" {
   default     = false
 }
 
-variable "sql_firewall_rull_ip_address" {
-  type        = string
+variable "sql_firewall_rull_ip_addresses" {
+  type        = list(string)
   description = "SQL Firewall rule to allow access to execute BACPAC file."
-  default     = ""
+  default     = []
 }
 
 variable "sql_bacpac_file_path" {
@@ -80,4 +80,19 @@ variable "df_github_config" {
   })
   description = "Data Factory Github integration."
   default     = null
+}
+
+variable "private_link_resource_group_name" {
+  type        = string
+  description = "Resource Group Name where the Private Link Subnet is located."
+}
+
+variable "private_link_vnet_name" {
+  type        = string
+  description = "Virtual Network Name where the Private Link Subnet is located."
+}
+
+variable "private_link_subnet_name" {
+  type        = string
+  description = "Subnet Name for the Private Link Subnet."
 }

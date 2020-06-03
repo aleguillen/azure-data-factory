@@ -17,37 +17,16 @@ resource "azurerm_sql_server" "example" {
   )
 }
 
-# CREATE: SQL server firewall rule - local machine
-# GET: Current machine IP
-data "http" "myip" {
-  url = "http://ipv4.icanhazip.com"
-}
+# CREATE: SQL server firewall rules - local machine
+resource "azurerm_sql_firewall_rule" "sql_firewall_rull_ip_addresses" {
+  count = length(var.sql_firewall_rull_ip_addresses)
 
-resource "azurerm_sql_firewall_rule" "current_machine_ip" {
-  name                = "fw-allow-${replace(data.http.myip.body, "\n", "")}"
+  name                = "fw-allow-${var.sql_firewall_rull_ip_addresses[count.index]}"
   resource_group_name = azurerm_resource_group.example.name
   server_name         = azurerm_sql_server.example.name
-  start_ip_address    = replace(data.http.myip.body, "\n", "")
-  end_ip_address      = replace(data.http.myip.body, "\n", "")
+  start_ip_address    = var.sql_firewall_rull_ip_addresses[count.index]
+  end_ip_address      = var.sql_firewall_rull_ip_addresses[count.index]
 }
-
-resource "azurerm_sql_firewall_rule" "sql_firewall_rull_ip_address" {
-  count = length(var.sql_firewall_rull_ip_address) > 0 ? 1 : 0
-
-  name                = "fw-allow-${var.sql_firewall_rull_ip_address}"
-  resource_group_name = azurerm_resource_group.example.name
-  server_name         = azurerm_sql_server.example.name
-  start_ip_address    = var.sql_firewall_rull_ip_address
-  end_ip_address      = var.sql_firewall_rull_ip_address
-}
-
-# CREATE: SQL server firewall rule - ADO server
-# resource "azurerm_sql_virtual_network_rule" "sqlvnetrule" {
-#   name                = "ado-sql-vnet-rule"
-#   resource_group_name = azurerm_resource_group.example.name
-#   server_name         = azurerm_sql_server.example.name
-#   subnet_id           = data.azurerm_subnet.ado.id
-# }
 
 # CREATE: SQL DB
 resource "azurerm_sql_database" "example" {
@@ -82,7 +61,6 @@ resource "azurerm_sql_database" "example" {
   )
 
   depends_on = [
-    azurerm_sql_firewall_rule.current_machine_ip,
-    azurerm_sql_firewall_rule.sql_firewall_rull_ip_address
+    azurerm_sql_firewall_rule.sql_firewall_rull_ip_addresses
   ]
 }

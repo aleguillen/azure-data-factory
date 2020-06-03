@@ -35,18 +35,4 @@ resource "azurerm_key_vault" "example" {
       display_name = "Key Vault"
     }
   )
-
-}
-
-# CREATE: Azure SQL Secrets
-resource "azurerm_key_vault_secret" "sql-username" {
-  name         = "sql-username"
-  value        = var.sql_username
-  key_vault_id = azurerm_key_vault.example.id
-}
-
-resource "azurerm_key_vault_secret" "sql-password" {
-  name         = "sql-password"
-  value        = var.sql_password
-  key_vault_id = azurerm_key_vault.example.id
 }

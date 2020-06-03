@@ -31,3 +31,4 @@ resource "azurerm_storage_blob" "csv" {
   type                   = "Block"
   source                 = "../input/emp.csv"
 }
+

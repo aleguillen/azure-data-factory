@@ -14,6 +14,21 @@ This repo shows an example on how to move data from Azure Data Lake Gen2 (csv fi
 * Clone repo in your local computer, for more info see [here](https://docs.microsoft.com/en-us/azure/devops/repos/git/clone).
     * Git source Url: https://github.com/aleguillen/azure-data-factory
 
+## How to create Linux Jumpserver and Azure Bastion Network
+
+* Before you start, update variables values inside file *create-bastion-network.sh*.
+* Navidate to the repo location in your local computer.
+* Execute the following bash script:
+
+    ```bash
+    # Login to Azure
+    az login
+    az account set --subscription <replace-me-subscription-id>
+
+    # Run script
+    ./create-bastion-network.sh
+    ```
+
 ## How to create [infrastructure](/infra)
 
 * Before you start, update variables values inside file *terraform.tfvars* located in */infra*.
