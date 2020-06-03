@@ -1,6 +1,5 @@
-# Azure Data Factory Examples using Terraform
-Azure Data Factory
-
+# Azure Data Factory Example using Terraform
+This repo shows an example on how to move data from Azure Data Lake Gen2 (csv file) to Azure SQL Server using Data Factory. Terraform is used as IaC tool for the infrastructure and Azure DevOps and Git Integration is used to implement a CI/CD lifecycle in an Azure Data Factory.
 
 ## Before you start
 
@@ -15,20 +14,27 @@ Azure Data Factory
 * Clone repo in your local computer, for more info see [here](https://docs.microsoft.com/en-us/azure/devops/repos/git/clone).
     * Git source Url: https://github.com/aleguillen/azure-data-factory
 
-## How to run [ADLS to SQL example](/adls-to-sql)
+## How to create [infrastructure](/infra)
 
-* Before you start, update variables values inside file *terraform.tfvars* located in */adls-to-sql/infra*.
+* Before you start, update variables values inside file *terraform.tfvars* located in */infra*.
 * Navidate to the repo location in your local computer.
 * Execute the following bash script:
 
     ```bash
     # Move to sample infra folder
-    cd ./adls-to-sql/infra
+    cd ./infra
 
-    # Remember to Login to Azure
-    # az login
-    # az account set --subscription <replace-me-subscription-id>
+    # Login to Azure
+    az login
+    az account set --subscription <replace-me-subscription-id>
 
-    # Script to execute Terraform script - To perform: init, plan and apply select option 5
-    ../../deploy.sh
+    # init - Initialize a Terraform working directory
+    terraform init
+
+    # plan - Generate and show an execution plan
+    terraform plan
+
+    # apply -> Builds or changes infrastructure
+    # -auto-approve -> optional - Skip interactive approval of plan before applying.
+    terraform apply -auto-approve
     ```

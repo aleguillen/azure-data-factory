@@ -2,27 +2,32 @@ variable "prefix" {
   type        = string
   description = "The prefix for all your resources. Ex.: <prefix>-rg, <prefix>-vnet"
 
-#   validation {
-#         condition = can(regex("^[a-z]{1}[a-z0-9]{1,4}$", var.prefix))
-#         error_message = "The prefix value must be from 2 to 3 characters long. Must start with a letter. Only alphanumeric numbers are allowed."
-#   }
+  #   validation {
+  #         condition = can(regex("^[a-z]{1}[a-z0-9]{1,4}$", var.prefix))
+  #         error_message = "The prefix value must be from 2 to 3 characters long. Must start with a letter. Only alphanumeric numbers are allowed."
+  #   }
 }
 
 variable "environment_name" {
   type        = string
   description = "Environment Name."
   default     = "dev"
-  
-#   validation {
-#         condition = can(regex("(?=^[a-z]{3}$)(?=(dev|acc|prd))", var.environment_name))
-#         error_message = "The environment_name value must be either: dev, acc or prd."
-#   }
+
+  # validation {
+  #   condition = can(regex("(?=^[a-zA-Z]{4}$)(?=(dev|acc|prd|nprd))", var.environment_name))
+  #   error_message = "The environment_name value must be either: dev, acc, prd or nprd."
+  # }
 }
 
 variable "location" {
   type        = string
   description = "The Azure region where your resources will be created."
-  default     = "southcentralus"
+}
+
+variable "common_tags" {
+  type        = map(string)
+  description = "Common resources tags. Key-value pair"
+  default     = {}
 }
 
 variable "sql_username" {
@@ -54,19 +59,25 @@ variable "sql_zone_redundant_enabled" {
 }
 
 variable "sql_firewall_rull_ip_address" {
-    type        = string
-    description = "SQL Firewall rule to allow access to execute BACPAC file."
-    default     = ""
+  type        = string
+  description = "SQL Firewall rule to allow access to execute BACPAC file."
+  default     = ""
+}
+
+variable "sql_bacpac_file_path" {
+  type        = string
+  description = "SQL .bacpac file location to upload and use to import into SQL DB."
+  default     = ""
 }
 
 variable "df_github_config" {
   type = object({
-    account_name     = string
-    branch_name      = string
-    git_url          = string
-    repository_name  = string
-    root_folder      = string
+    account_name    = string
+    branch_name     = string
+    git_url         = string
+    repository_name = string
+    root_folder     = string
   })
   description = "Data Factory Github integration."
-  default     =  null
+  default     = null
 }
