@@ -70,7 +70,7 @@ az vm create \
 
 # CREATE: Windows Server - Data Factory IR
 # You will be prompt to enter password
-`if [ "$CREATE_DFIR_VM" = true ]; 
+if [ "$CREATE_DFIR_VM" = true ]; 
 then
 echo "Creating Data Factory IR Server - $RG_NAME - $VM_NAME_WS"
 az vm create \
@@ -87,4 +87,3 @@ fi
 echo "private_link_resource_group_name = \"$RG_NAME\""
 echo "private_link_vnet_name = \"$VNET_NAME\""
 echo "private_link_subnet_name = \"$SUBNET_NAME\""
-`
