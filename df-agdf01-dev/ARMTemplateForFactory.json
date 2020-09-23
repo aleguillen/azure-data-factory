@@ -185,12 +185,12 @@
 					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 				},
 				"connectVia": {
-					"referenceName": "SelfHostedIntegrationRuntime1",
+					"referenceName": "shir-df-agdf01-dev",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/SelfHostedIntegrationRuntime1')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/shir-df-agdf01-dev')]"
 			]
 		},
 		{
@@ -204,16 +204,16 @@
 					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
 				},
 				"connectVia": {
-					"referenceName": "SelfHostedIntegrationRuntime1",
+					"referenceName": "shir-df-agdf01-dev",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/SelfHostedIntegrationRuntime1')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/shir-df-agdf01-dev')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SelfHostedIntegrationRuntime1')]",
+			"name": "[concat(parameters('factoryName'), '/shir-df-agdf01-dev')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
 			"properties": {
