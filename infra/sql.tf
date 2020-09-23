@@ -28,6 +28,17 @@ resource "azurerm_sql_firewall_rule" "sql_firewall_rull_ip_addresses" {
   end_ip_address      = var.sql_firewall_rull_ip_addresses[count.index]
 }
 
+# UPDATE: Set AD Administrator - it can be an AD Group or User
+resource "azurerm_sql_active_directory_administrator" "example" {
+  for_each = var.sql_ad_administrator
+  
+  server_name         = azurerm_sql_server.example.name
+  resource_group_name = azurerm_resource_group.example.name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  login               = each.key
+  object_id           = each.value
+}
+
 # CREATE: SQL DB
 resource "azurerm_sql_database" "example" {
   name                = local.sql_db_name
@@ -64,3 +75,17 @@ resource "azurerm_sql_database" "example" {
     azurerm_sql_firewall_rule.sql_firewall_rull_ip_addresses
   ]
 }
+
+# Pending SQL Script to Setup ADF MSI authentication
+# resource "null_resource" "sql_cmd" {
+#   triggers = {
+#     always_run = uuid()
+#   }
+
+#   provisioner "local-exec" {
+#     command = <<EOT
+
+      
+#     EOT
+#   }
+# }

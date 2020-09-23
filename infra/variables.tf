@@ -64,6 +64,13 @@ variable "sql_firewall_rull_ip_addresses" {
   default     = []
 }
 
+variable "sql_ad_administrator" {
+  type        = map
+  description = "SQL AD object administrator name and object id key-value pair. Ex. { 'user@domain.com': '11111111-2222-3333-4444-555555555555' }"
+  default     = null
+}
+
+
 variable "sql_bacpac_file_path" {
   type        = string
   description = "SQL .bacpac file location to upload and use to import into SQL DB."

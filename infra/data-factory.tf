@@ -1,10 +1,10 @@
-
 # CREATE: Data Factory
 resource "azurerm_data_factory" "example" {
   name                = local.df_name
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
+  # Enable Managed Identity
   identity {
     type = "SystemAssigned"
   }
@@ -30,6 +30,13 @@ resource "azurerm_data_factory" "example" {
 
 }
 
+# CREATE: Data Factory IR
+resource "azurerm_data_factory_integration_runtime_self_hosted" "example" {
+  name                = "shir-${azurerm_data_factory.example.name}"
+  resource_group_name = azurerm_resource_group.example.name
+  data_factory_name   = azurerm_data_factory.example.name
+}
+
 # UPDATE: Adding Access Policy for Azure Data Factory
 resource "azurerm_key_vault_access_policy" "data_factory" {
 
@@ -42,16 +49,4 @@ resource "azurerm_key_vault_access_policy" "data_factory" {
     "get",
     "list"
   ]
-}
-
-resource "azurerm_role_assignment" "adf_to_adls_access" {
-  scope                = azurerm_storage_account.example.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_data_factory.example.identity.0.principal_id
-}
-
-resource "azurerm_role_assignment" "adf_to_sql_access" {
-  scope                = azurerm_sql_database.example.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_data_factory.example.identity.0.principal_id
 }

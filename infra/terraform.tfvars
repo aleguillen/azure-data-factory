@@ -14,6 +14,13 @@ sql_edition = "Standard"
 
 sql_zone_redundant_enabled = false
 
+# Get using CLI
+# Current signed-in user: az ad signed-in-user show --query "[userPrincipalName, objectId]"
+# sql_ad_administrator = {
+#     "user@domain.com": "11111111-2222-3333-4444-555555555555"
+# }
+sql_ad_administrator = null
+
 sql_firewall_rull_ip_address = ["0.0.0.0"] # 0.0.0.0 -> Public Internet Access Allowed 
 
 sql_bacpac_file_path = "../scripts/db-dev.bacpac"

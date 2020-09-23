@@ -8,7 +8,7 @@
 			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-agdf01-dev.database.windows.net;Initial Catalog=sqldb-agdf01-dev"
 		},
 		"connectVia": {
-			"referenceName": "SelfHostedIntegrationRuntime1",
+			"referenceName": "shir-df-agdf01-dev",
 			"type": "IntegrationRuntimeReference"
 		}
 	}

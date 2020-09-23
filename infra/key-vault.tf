@@ -7,7 +7,7 @@ resource "azurerm_key_vault" "example" {
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_disk_encryption = false
   soft_delete_enabled         = true
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
 
   sku_name = "standard"
 
@@ -16,16 +16,17 @@ resource "azurerm_key_vault" "example" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
 
+    key_permissions = [
+      "create", "decrypt", "delete", "encrypt", "get", "import", "list", "purge", "recover", "restore", "sign", "unwrapKey", "update", "verify", "wrapKey"
+    ]
+
     secret_permissions = [
-      "get",
-      "list",
-      "set",
-      "restore"
+      "get", "list", "set",   "restore"
     ]
   }
 
   network_acls {
-    default_action = "Allow"
+    default_action = "Deny"
     bypass         = "AzureServices"
   }
 
@@ -35,4 +36,21 @@ resource "azurerm_key_vault" "example" {
       display_name = "Key Vault"
     }
   )
+}
+
+# CREATE: CMK key to Encrypt data
+resource "azurerm_key_vault_key" "generated" {
+  name         = "cmk-encrypt-key"
+  key_vault_id = azurerm_key_vault.example.id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
 }

@@ -7,7 +7,7 @@
 			"url": "https://dlsagdf01devedbd454a34.dfs.core.windows.net"
 		},
 		"connectVia": {
-			"referenceName": "SelfHostedIntegrationRuntime1",
+			"referenceName": "shir-df-agdf01-dev",
 			"type": "IntegrationRuntimeReference"
 		}
 	}

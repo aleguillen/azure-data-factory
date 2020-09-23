@@ -5,7 +5,6 @@
 ## The name Bastion network comes from Azure Bastion since is enabled on test VM located in the same network. ##
 ################################################################################################################
 
-
 #################
 ### VARIABLES ###
 #################
@@ -14,14 +13,16 @@ SUBSCRIPTION_ID=<replace-me>
 PREFIX=<replace-me>
 ENVIRONMENT=<replace-me>
 LOCATION=<replace-me>
+      
+NAMING_CONV="$PREFIX-$LOCATION-$ENVIRONMENT"
 
-RG_NAME="rg-$PREFIX-$LOCATION-$ENVIRONMENT"
-VNET_NAME="vnet-$PREFIX-$ENVIRONMENT"
-VM_NAME="vm-$PREFIX-$ENVIRONMENT"
-CREATE_DFIR_VM=false
-VM_NAME_WS="vm-dfir-$ENVIRONMENT"
-BASTION_HOST="bastion-$PREFIX-$ENVIRONMENT"
-BASTION_HOST_PIP="pip-bastion-$PREFIX-$ENVIRONMENT"
+RG_NAME="rg-$NAMING_CONV"
+VNET_NAME="vnet-$NAMING_CONV"
+VM_NAME="vm-$NAMING_CONV"
+CREATE_DATA_FACTORY_IR_VM=true
+VM_NAME_WS="vm-win-$NAMING_CONV"
+BASTION_HOST="bastion-$NAMING_CONV"
+BASTION_HOST_PIP="pip-bastion-$NAMING_CONV"
 
 SUBNET_NAME="default"
 
@@ -66,17 +67,16 @@ az vm create \
     --admin-username azureuser \
     --generate-ssh-keys \
     --vnet-name $VNET_NAME \
-    --subnet "default"
+    --subnet $SUBNET_NAME
 
 # CREATE: Windows Server - Data Factory IR
 # You will be prompt to enter password
-if [ "$CREATE_DFIR_VM" = true ]; 
-then
-echo "Creating Data Factory IR Server - $RG_NAME - $VM_NAME_WS"
+if [ "$CREATE_DATA_FACTORY_IR_VM" = true ]; then
+echo "   -> Creating Data Factory IR Server - $RG_NAME - $VM_NAME_WS"
 az vm create \
     --resource-group $RG_NAME \
     --name $VM_NAME_WS \
-    --image win2016datacenter \
+    --image win2019datacenter \
     --storage-sku StandardSSD_LRS \
     --size Standard_D2_v3 \
     --admin-username azureuser \

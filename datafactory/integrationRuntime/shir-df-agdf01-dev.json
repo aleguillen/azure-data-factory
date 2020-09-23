@@ -1,5 +1,5 @@
 {
-	"name": "SelfHostedIntegrationRuntime1",
+	"name": "shir-df-agdf01-dev",
 	"properties": {
 		"type": "SelfHosted"
 	}
