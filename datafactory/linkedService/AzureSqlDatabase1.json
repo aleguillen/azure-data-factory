@@ -5,7 +5,8 @@
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-agdf01-dev.database.windows.net;Initial Catalog=sqldb-agdf01-dev"
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=sql-agdf01-dev.database.windows.net;initial catalog=sqldb-agdf01-dev;user id=czc",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjNDhiMzBhYy03ZmEwLTQwMDQtYjAyMC0xMDE0YmQxZWNmYzgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "shir-df-agdf01-dev",
