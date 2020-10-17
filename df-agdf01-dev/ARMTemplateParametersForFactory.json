@@ -8,8 +8,8 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"value": "https://dlsagdf01devedbd454a34.dfs.core.windows.net"
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://kv-agdf01-dev.vault.azure.net/"
 		}
 	}
 }

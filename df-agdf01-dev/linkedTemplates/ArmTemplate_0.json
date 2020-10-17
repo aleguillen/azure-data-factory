@@ -11,15 +11,28 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://dlsagdf01devedbd454a34.dfs.core.windows.net"
+			"defaultValue": "https://kv-agdf01-dev.vault.azure.net/"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/shir-df-agdf01-dev')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
@@ -29,25 +42,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
-				},
-				"connectVia": {
-					"referenceName": "shir-df-agdf01-dev",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/shir-df-agdf01-dev')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
@@ -66,160 +60,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/shir-df-agdf01-dev')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FirstName",
-						"type": "varchar"
-					},
-					{
-						"name": "LastName",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "emp"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedTextCSV1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "emp.csv",
-						"fileSystem": "input"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "FirstName",
-						"type": "String"
-					},
-					{
-						"name": "LastName",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopyFromADLStoSQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data ADLS to SQL",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "FirstName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FirstName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LastName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LastName",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DelimitedTextCSV1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureSqlTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DelimitedTextCSV1')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]"
 			]
 		}
 	]

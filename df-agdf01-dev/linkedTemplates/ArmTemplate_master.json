@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://dlsagdf01devedbd454a34.dfs.core.windows.net"
+			"defaultValue": "https://kv-agdf01-dev.vault.azure.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -45,8 +45,8 @@
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
-					"AzureDataLakeStorage1_properties_typeProperties_url": {
-						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
 					}
 				}
 			},
