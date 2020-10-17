@@ -8,9 +8,6 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
-		"AzureKeyVault1_properties_typeProperties_baseUrl": {
-			"value": "https://kv-agdf01-dev.vault.azure.net/"
-		},
 		"containerUri": {
 			"value": ""
 		},
